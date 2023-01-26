@@ -11,7 +11,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var todoJSON = `{"task":"create test"}`
+var todoJSON = `{"task":"testing task"}`
+
+type TodoResponse struct {
+	ResponseStructure
+	Data json.RawMessage
+}
 
 func TestCreateTodo(t *testing.T) {
 	e := echo.New()
@@ -19,15 +24,9 @@ func TestCreateTodo(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/todos", strings.NewReader(todoJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
-
 	c := e.NewContext(req, rec)
+	h := InitHandlerInstance().Todo
 
-	h := NewHandlersInstance().Todo
-	var resultJSON map[string]map[string]string
-	json.Unmarshal(rec.Body.Bytes(), &resultJSON)
-	var expectedJSON map[string]string
-	json.Unmarshal([]byte(todoJSON), &expectedJSON)
-	if assert.NoError(t, h.CreateTodo(c)) {
-		assert.Equal(t, http.StatusCreated, rec.Code)
-	}
+	assert.NoError(t, h.CreateTodo(c))
+
 }

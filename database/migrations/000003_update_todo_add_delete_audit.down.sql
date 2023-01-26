@@ -1,0 +1,4 @@
+ALTER TABLE todos
+DROP COLUMN IF EXISTS deleted_at ;
+ALTER TABLE todos
+DROP COLUMN IF EXISTS deleted_by ;
